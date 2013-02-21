@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" href="style.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="jquery.ejb.slidepanel.3.0.js"></script>
+	<script>
+		$(function(){
+			$('#flower').slidepanel({controls:'#controls'});
+		});
+	</script>
+</head>
+<body>
+	<section>
+		<ul id="flower" class="fadeSlide">
+			<li class='active'><img src="images/flower1.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.png"/></li>
+			<li><img src="images/flower4.png"/></li>
+		</ul>
+		<div id="controls"></div>
+		and more
+	</section>
+</body>
+</html>
