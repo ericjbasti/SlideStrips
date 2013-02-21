@@ -1,3 +1,5 @@
+section{
+}
 ul.fadeSlide{
 	position: relative;
 	list-style: none;
@@ -10,11 +12,11 @@ ul.fadeSlide li {
 	top:0;
 	left:0;
 	width:100%;
-	height: auto;
 }
-ul.fadeSlide li img{
+ul.fadeSlide img{
 	opacity: 0;
 	z-index: 0;
+	width:100%;
 	-webkit-transition: opacity 1s ease-in-out 0s;
 }
 ul.fadeSlide li.active img{
