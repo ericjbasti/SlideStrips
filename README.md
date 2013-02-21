@@ -1,4 +1,7 @@
-slidepanel
+slidepanel v3.0a
 ==========
 
-slidepanel v3.0
+starting fresh
+---------------
+
+completely rewriting the slidepanel with a focus on touch and responsive.
