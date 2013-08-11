@@ -1,7 +1,7 @@
-slidepanel v3.0a
+SlideStrips
 ==========
 
-starting fresh
----------------
+fully responsive slides
+-----------------------
 
-completely rewriting the slidepanel with a focus on touch and responsive.
+
