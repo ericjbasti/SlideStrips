@@ -1,13 +1,29 @@
 //*******************************************************************************************************
 //
-//  v3.0
-//	Eric J. Basti
+// Copyright 2013 Eric J. Basti
+// http://www.ericjbasti.com
 //
-//	Complete Rewrite
-//	Going for full responsive here.
-//	CSS animated transitions.
+// Released under the MIT license
+// 
+//*******************************************************************************************************
+//
+//  SlideStrips
+//
+//	Full Responsive Slideshow w/ CSS animated transitions... 
+//
+//  8/1/13: Fixed a bug that prevented multiple dynamic control sets.
+//			Each slideshow now has a localized variable containing the controls.
+//			Fixed issue with 3 slides of 2 panel width, never dragging to the last slide.
+//			Added in a very basic form of lazy loading.
+//
+//	6/5/13: updateWidths() now checks to see if we see over 98% of a slide, 
+//			and if so cound it as in view.
+//
+//  6/4/13: updated the way active is applied to visible slides. 
+//			this allows multiple slides to be marked as active.
 //
 //  3/3/13: fixing issues with single panel slideshows... the forgotten.
+//
 //	3/1/13: bad day...
 //			I added in the fallback code for older/bad browsers (as I see them atleast),
 //			the differences were just too small to warrent another file.
@@ -33,7 +49,7 @@
 	}
 
 
-	$.fn.slidepanel = function(options) {
+	$.fn.slideStrip = function(options) {
 		var defaults = {
 			start:0,
 			pause:5,
@@ -43,22 +59,25 @@
 			controls: null,
 			trueFit:true,
 			slingBack:false,
+			threshold:30,
+			fallBacks:{fadeTime:0.5,slideTime:0.5},
 			onSlideChange:function(){}
 		};
-		
+
 		options = $.extend(defaults, options);
-	
+
 		return this.each(function() {
-			var slidepanel = this;
-			var holder = $(this).wrap("<div class='slidepanel'>").parent();
+			var slideStrip = this;
+			var slideControls= null;
+			var holder = $(this).wrap("<div class='slideStrip'>").parent();
 			var slides = $(this).find('li');
 
 			// ok, so you could pass in an #id for this, but in some situation you won't want to already have these places on the screen.
-			// this 'add' check allows the controls to be inside the 'slidepanel'.
+			// this 'add' check allows the controls to be inside the 'slideStrip'.
 			// this might become standard ill have to think about it.
 			if (options.controls=='add') {
 				$(holder).append('<div class="controls"></div>');
-				options.controls=$(holder).find('.controls');
+				slideControls=$(holder).find('.controls');
 			}
 
 			var now = options.start;
@@ -66,13 +85,13 @@
 			var paused = !options.autoPlay;
 			var maxX=0;
 			var minX=0;
-
+			var trueWidth=1;
 			var slideWidth=1;
 
-			// ok so we need to get the height of this slidepanel, we need it to be responsive... lets make a sizing element.
+			// ok so we need to get the height of this slideStrip, we need it to be responsive... lets make a sizing element.
 			// inorder to make sure the sizing is correct, we want to use the exact markup of an original element.
 			// however we need to make sure a few things are true, so we inline those styles.
-			var heightElement = $(slidepanel).prepend("<li class='sp_invisible' style='visibility:hidden;position:relative;'>"+$(slides[now]).html()+"</li>");
+			var heightElement = $(slideStrip).prepend("<li class='sp_invisible' style='visibility:hidden;position:relative;'>"+$(slides[now]).html()+"</li>");
 			// awesome now that we've done that our css and markup should be much cleaner... and valid.
 
 			// time to check what is supported.
@@ -89,40 +108,51 @@
 			}
 
 			var activeSlide = function(id){
-				if(!transition)	$(slidepanel).clearQueue();
+				if(!transition)	$(slideStrip).clearQueue();
 				$(slides).removeClass('active');
-				$(slides[id]).addClass('active');
+				for (var i=0; i!= slideWidth; i++){
+					$(slides[id+i]).addClass('active');
+					var img= $(slides[id+i]).find('img');
+					if($(img).attr('ref') && $(img).attr('ref')!= $(img).attr('src')){
+						$(img).attr('src',$(img).attr('ref'));
+					}
+				}
+
 				if(options.slide){
 					var newX=-(id*100);
 					if(options.trueFit){
-						if(id+slideWidth>slides.length){
+						if(id+slideWidth>slides.length-1){
 							newX=-maxX;
 							now=(Math.round(newX/100))*-1;
 						}
 					}
 					if(transition){
-						slidepanel.style[transform] = 'translateX('+newX+'%)';
+						slideStrip.style[transform] = 'translateX('+newX+'%)';
 					}else{
 						// So close, but for some reason I have to divide by the slideWidth, guess the positioning is messing with my 100%.
-						$(slidepanel).animate({left:newX/slideWidth+"%"},1000);
+						$(slideStrip).animate({left:newX/trueWidth+"%"},options.fallBacks.slideTime*1000);
+					}
+				}else{
+					if(!options.slide && !transition){
+						$(slides).fadeOut(options.fallBacks.fadeTime);
+						$(slides[id]).fadeIn(options.fallBacks.fadeTime);
 					}
 				}
-				if (options.controls){
-					$(options.controls).find('.button').removeClass('active');
+				if (slideControls){
+					$(slideControls).find('.button').removeClass('active');
 					if(options.trueFit){
 						id=Math.round((id/slideWidth)+0.4)*slideWidth;
 					}
-					$(options.controls).find('.button[name='+id+']').addClass('active');
+					$(slideControls).find('.button[name='+id+']').addClass('active');
 					if (now>=slides.length-slideWidth) {
-						$(options.controls).find('.button:last-child').addClass('active');
+						$(slideControls).find('.button:last-child').addClass('active');
 					}
 				}
 			};
 
-
 			var play = function(pause){
 				activeSlide(now);
-				options.onSlideChange(now);
+				options.onSlideChange(now,slides.length-slideWidth);
 				clearTimeout(timer);
 				if(pause){
 				}else{
@@ -134,11 +164,12 @@
 
 			var nextSlide = function(){
 				now+=slideWidth;
-				if (now>slides.length-1) {
+				console.log(now,slideWidth,slides.length,now-1>slides.length-slideWidth)
+				if (now-(slideWidth/2)>slides.length-slideWidth) {
 					if(options.slingBack){
 						now=0;
 					}else{
-						now=slides.length-1;
+						now=slides.length-slideWidth;
 					}
 				}
 				play(paused);
@@ -158,7 +189,7 @@
 
 			// lets create the controls...
 			var controls = function(){
-				if(options.controls){
+				if(slideControls){
 					var buttons='';
 					var count=0;
 					for (var i=0;i<slides.length;i+=slideWidth){
@@ -168,10 +199,10 @@
 					// if we only have one panel, we shouldn't create a single button,
 					// otherwise, let them live.
 					if (count==1){
-						$(options.controls).html('');
+						$(slideControls).html('');
 					}else{
-						$(options.controls).html(buttons);
-						$(options.controls).find('.button').click(function(){
+						$(slideControls).html(buttons);
+						$(slideControls).find('.button').click(function(){
 							var id=parseFloat($(this).attr('name'));
 							now=id;
 							play(paused);
@@ -181,18 +212,26 @@
 
 			};
 
+			var updateWidths = function (){
+				trueWidth=$(holder).width()/$(slideStrip).width();
+				slideWidth=Math.floor(trueWidth) || 1;
+				// to many situation when a browser rounds our css% so we need to take action
+				// if your within a range that I would consider a 5% margin of error, we are going to upgrade you.
+				// seing 98% of a slide should count as seeing the whole thing.
+				if(trueWidth-slideWidth>.95) slideWidth++;
+			};
+
 			var init = function(){
+				if (options.slide) updateWidths();
 				controls();
 				play(paused);
-				if(options.slide){
-					slideWidth=(($(holder).width()/$(slides[0]).width())|0) || 1;
-				}
 			};
 
 			// ok now we have some 'touch' options, in my world touch and mouse are the same
 			// they only act differently in certain situations. So we'll catch those situation,
 			// but for the most part, keep everything the same.
 			if(options.touch){
+				holder.addClass('touch');
 				var touch={active:false,x:0,y:0,deltaX:0,deltaY:0};
 				var original={width:0,x:0,y:0};
 				var percent=0;
@@ -203,11 +242,12 @@
 
 					var onPress=function(event){
 						if(transition){
-							original.x=parseFloat((slidepanel.style[transform]).replace('translateX(',''));
+							original.x=parseFloat((slideStrip.style[transform]).replace('translateX(',''));
 						}else{
-							original.x=parseFloat(slidepanel.style.left);
+							$(slideStrip).clearQueue();
+							original.x=parseFloat(slideStrip.style.left);
 						}
-						original.width=$(slidepanel).find('.active').width();
+						original.width=$(slideStrip).find('.active').width();
 						percent=0;
 						touch.active=true;
 						touch.x=parseFloat(event.clientX);
@@ -215,7 +255,7 @@
 						touch.deltaX=touch.deltaY=0;
 						clearTimeout(timer);
 						paused=true;
-						if(transition) slidepanel.style[transition+'Duration'] = '0s';
+						if(transition) slideStrip.style[transition+'Duration'] = '0s';
 						if(event.type=='mousedown'){
 							event.preventDefault();
 						}
@@ -226,52 +266,57 @@
 							touch.deltaX = touch.x-parseFloat(event.clientX);
 							touch.deltaY = touch.y-parseFloat(event.clientY);
 							percent = (touch.deltaX/original.width)*100;
+							if (!transition) percent = percent/trueWidth;
 							if(options.slide){
 								var newX = original.x-percent;
-
 								if (newX>0){
 									newX = newX/4;
 								}
-								if (newX<-maxX){
-									if(original.x>-maxX){
+								if (newX<=-maxX){
+									if(original.x>-maxX+25){
 										newX = -maxX+25-(percent*0.25);
 									}else{
 										newX = -maxX-(percent*0.25);
 									}
 								}
 								if(transition){
-									slidepanel.style[transform] = 'translateX('+newX+'%)';
+									slideStrip.style[transform] = 'translateX('+newX+'%)';
 								}else{
-									$(slidepanel).css({'left':newX+'%'});
+									$(slideStrip).css({'left':newX+'%'});
 								}
 							}
 							if(touch.deltaX>=10 || touch.deltaX<=-10) {
 								e.preventDefault();
-								$(slidepanel).addClass('moving');
+								$(slideStrip).addClass('moving');
 							}
 						}
 					};
-						
+
 					var onRelease=function(event){
 						// lets rest the duration so it will use the CSS setting
 						if(transition){
-							slidepanel.style[transition+'Duration'] = '';
+							slideStrip.style[transition+'Duration'] = '';
 						}
 						var newX;
-						if(percent>30){
+						var maxDelta=options.threshold;
+						if (!transition) maxDelta=maxDelta/trueWidth;
+						if(percent>maxDelta){
 							nextSlide();
-						}else if (percent<-30){
+						}else if (percent<-maxDelta){
 							previousSlide();
 						}else{
 							activeSlide(now);
 						}
 						touch.active=false;
-						if(percent>=10 || percent<=-10) {
+						if(percent>=5 || percent<=-5) {
 							event.preventDefault();
 							setTimeout(function(){
-								$(slidepanel).removeClass('moving');
+								$(slideStrip).removeClass('moving');
 							},100);
+						}else{
+							return true
 						}
+
 					};
 					if(event.type){
 						switch(event.type){
@@ -284,7 +329,7 @@
 							case "touchend":onRelease(event.targetTouches[0]);break;
 							case "touchcancel":onRelease(event.targetTouches[0]);break;
 							case "touchleave":onRelease(event.targetTouches[0]);break;
-								
+
 							case "MSPointerMove":onMove(event,event);break;
 							case "MSPointerUp":onRelease(event);break;
 							case "MSPointerDown":onPress(event);break;
@@ -294,16 +339,16 @@
 					}
 				};
 				if(options.touch){
-					slidepanel.onmousedown	=	onPressEvent;
-					slidepanel.onmouseup	=	onPressEvent;
-					slidepanel.onmousemove	=	onPressEvent;
-					
+					slideStrip.onmousedown	=	onPressEvent;
+					slideStrip.onmouseup	=	onPressEvent;
+					slideStrip.onmousemove	=	onPressEvent;
+
 					if(isTouchDevice){
-						slidepanel.ontouchstart	=	onPressEvent;
-						slidepanel.ontouchmove	=	onPressEvent;
-						slidepanel.ontouchend	=	onPressEvent;
-						slidepanel.ontouchcancel=	onPressEvent;
-						slidepanel.ontouchleave	=	onPressEvent;
+						slideStrip.ontouchstart	=	onPressEvent;
+						slideStrip.ontouchmove	=	onPressEvent;
+						slideStrip.ontouchend	=	onPressEvent;
+						slideStrip.ontouchcancel=	onPressEvent;
+						slideStrip.ontouchleave	=	onPressEvent;
 					}
 				}
 			}
@@ -324,18 +369,19 @@
 			$(this).bind('nextSlide',function(event){
 				nextSlide();
 			});
-			
+
 			// CALL: $('#who').trigger('previousSlide');
 			$(this).bind('previousSlide',function(event){
 				previousSlide();
 			});
 			if(options.slide){
 				$(window).resize(function(){
-					var newWidth=$(holder).width()/$(slidepanel).width();
-					slideWidth=Math.round(newWidth)||1;
+					if (options.slide) updateWidths();
 					controls();
-					activeSlide(now=0);
-					maxX=(slides.length*100)-(newWidth*100);
+					now=0;
+					play(true);
+					maxX=(slides.length*100)-(trueWidth*100);
+					//if(!transition) maxX=maxX/slideWidth;
 				});
 				setTimeout(function(){
 					$(window).trigger('resize');
