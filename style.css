@@ -1,37 +1,13 @@
-ul.fade-slide {
+/* General slideStrip CSS*/
+
+.slideStrip{
 	position: relative;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	overflow:hidden;
-	width:50%;
-}
-ul.fade-slide  li {
-	position: absolute;
-	top:0;
-	left:0;
-	width:100%;
-	opacity: 0;
-	z-index: 0;
-	-webkit-transition: opacity 1s ease-in-out 0s;
-}
-ul.fade-slide img{
-	width:100%;
-}
-ul.fade-slide  li.active{
-	z-index: 1;
-	opacity:1;
+	overflow: hidden;
 }
 
-ul.fade-slide li .message{
-	position: absolute;
-	bottom:1em;
-	left:1em;
-	background: rgba(255,255,255,.8);
-	padding: .5em
+.slideStrip ul li img{
+	width: 100%;
 }
-
-
 
 .button{
 	height:1em;
@@ -41,8 +17,64 @@ ul.fade-slide li .message{
 	display: inline-block;
 	border-radius: .5em;
 	margin: .25em;
-	-webkit-transition: background .5s ease-in-out 0s;
 }
 .button.active{
 	background: #bbb;
+}
+
+/*Fading slideStrip CSS*/
+ul.fade-strip {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width:100%;
+}
+ul.fade-strip  li {
+	position: absolute;
+	top:0;
+	left:0;
+	width:100%;
+	opacity: 0;
+	z-index: 0;
+	-webkit-transition: opacity .5s;
+	-moz-transition: opacity  .5s;
+	-ms-transition: opacity .5s;
+	-o-transition: opacity  .5s;
+	transition: opacity .5s;
+}
+
+ul.fade-strip  li.active{
+	z-index: 1;
+	opacity:1;
+}
+
+ul.fade-strip li .message{
+	position: absolute;
+	bottom:1em;
+	left:1em;
+	background: rgba(255,255,255,.8);
+	padding: .5em
+}
+
+/*Sliding slideStrip CSS*/
+ul.slide-strip {
+	position: relative;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 50%;
+	-webkit-transition: -webkit-transform .5s;
+	-moz-transition: -moz-transform  .5s;
+	-ms-transition: -ms-transform  .5s;
+	-o-transition: -o-transform  .5s;
+	transition: transform  .5s;
+	-webkit-backface-visibility: hidden;
+}
+ul.slide-strip li {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	padding: 0em;
+	overflow: hidden;
 }

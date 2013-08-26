@@ -164,7 +164,7 @@
 
 			var nextSlide = function(){
 				now+=slideWidth;
-				console.log(now,slideWidth,slides.length,now-1>slides.length-slideWidth)
+				//console.log(now,slideWidth,slides.length,now-1>slides.length-slideWidth)
 				if (now-(slideWidth/2)>slides.length-slideWidth) {
 					if(options.slingBack){
 						now=0;

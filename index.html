@@ -9,16 +9,22 @@
 	<![endif]-->
 	<link rel="stylesheet" href="style.css" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script src="jquery.ejb.slidepanel.3.0.js"></script>
+	<script src="jquery.ejb.SlideStrips.v1.js"></script>
 	<script>
 		$(function(){
-			$('#flower').slidepanel({controls:'#controls'});
+			$('#flower').slideStrip({controls:'add', touch:true});
+			$('#flower2').slideStrip({controls:'add', slide:true, touch:true});
 		});
 	</script>
 </head>
 <body>
 	<section>
-		<ul id="flower" class="fade-slide">
+		<h1>SlideStrips</h1>
+        <h2>a responsive slideshow</h2>
+        <p>
+			This is a very basic fading slideshow.
+		</p>
+		<ul id="flower" class="fade-strip">
 			<li><img src="images/flower1.jpg"/>
 				<div class="message">This copy is controlled throught css.</div>
 			</li>
@@ -28,8 +34,13 @@
 			<li><img src="images/flower3.jpg"/></li>
 			<li><img src="images/flower4.jpg"/></li>
 		</ul>
-		<div id="controls"></div>
-		and more
+
+		<ul id="flower2" class="slide-strip">
+			<li><img src="images/flower1.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+		</ul>
 	</section>
 </body>
 </html>
