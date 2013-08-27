@@ -7,7 +7,7 @@
 // 
 //*******************************************************************************************************
 //
-//  SlideStrips
+//  slideStrips
 //
 //	Full Responsive Slideshow w/ CSS animated transitions... 
 //
@@ -55,7 +55,7 @@
 			pause:5,
 			autoPlay:true,
 			slide:false,
-			touch:false,
+			touch:true,
 			controls: null,
 			trueFit:true,
 			slingBack:false,
