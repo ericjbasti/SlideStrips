@@ -24,6 +24,16 @@ Sliding + adding controls:
 $('#slides').slideStrip({controls:'add', slide:true});
 ```
 
+Lazy Loading:
+
+If your images include a ref property, the slideStrip will compare that to the current image src and load a new image if it needs to.
+the src and ref images should be of the same aspect ratio.
+
+```html
+ <ul class="slide-strip">
+     <li><img ref="/images/image1.jpg" src="/images/image1_low.jpg"></li>
+```
+
 Paramaters:
 
 ```javascript

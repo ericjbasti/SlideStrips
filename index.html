@@ -7,23 +7,42 @@
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="css/slideStrip.css" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script src="jquery.ejb.SlideStrips.v1.js"></script>
+	<script src="jquery.ejb.slideStrips.v1.js"></script>
 	<script>
 		$(function(){
-			$('#flower').slideStrip({controls:'add', touch:true});
-			$('#flower2').slideStrip({controls:'add', slide:true, touch:true});
+			$('#flower').slideStrip({controls:'add'});
+			$('#flower2').slideStrip({controls:'add', slide:true});
 		});
 	</script>
+	<style>
+		body{
+			background-color: #eee;
+			margin: 0;
+			font-family: Arial;
+		}
+		section{
+			background-color: #fff;
+			box-shadow: 0 0 3px rgba(0,0,0,.3);
+			width: 100%;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 10px;
+		}
+		.controls{
+			text-align: center;
+			padding-bottom: 20px;
+		}
+	</style>
 </head>
 <body>
 	<section>
-		<h1>SlideStrips</h1>
-        <h2>a responsive slideshow</h2>
+		<h1>slideStrips v1</h1>
         <p>
 			This is a very basic fading slideshow.
 		</p>
+		<pre>$('#flower').slideStrip({controls:'add'});</pre>
 		<ul id="flower" class="fade-strip">
 			<li><img src="images/flower1.jpg"/>
 				<div class="message">This copy is controlled throught css.</div>
@@ -34,7 +53,8 @@
 			<li><img src="images/flower3.jpg"/></li>
 			<li><img src="images/flower4.jpg"/></li>
 		</ul>
-
+		<p> A simple sliding slideshow </p>
+		<pre>$('#flower2').slideStrip({controls:'add', slide:true});</pre>
 		<ul id="flower2" class="slide-strip">
 			<li><img src="images/flower1.jpg"/></li>
 			<li><img src="images/flower2.jpg"/></li>
