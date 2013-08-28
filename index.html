@@ -9,11 +9,19 @@
 	<![endif]-->
 	<link rel="stylesheet" href="css/slideStrip.css" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script src="jquery.ejb.slideStrips.v1.js"></script>
+	<script src="jquery.slideStrips.v1.js"></script>
 	<script>
 		$(function(){
 			$('#flower').slideStrip({controls:'add'});
 			$('#flower2').slideStrip({controls:'add', slide:true});
+			$('#flower3').slideStrip({slingBack:true, autoPlay:false});
+			$('#prev').click(function(){
+				$('#flower3').trigger('previousSlide');
+			});
+			$('#next').click(function(){
+				$('#flower3').trigger('nextSlide');
+			});
+			$('#flower4').slideStrip({controls:'add', slide:true});
 		});
 	</script>
 	<style>
@@ -40,6 +48,48 @@
 			text-align: center;
 			padding-bottom: 20px;
 		}
+		.hold{
+			position: relative;
+		}
+		.message{
+			-ms-transition: all .5s .5s;
+			-webkit-transition: all .5s .5s;
+			-moz-transition: all .5s .5s;
+			-o-transition: all .5s .5s;
+			transition: all .5s .5s;
+			position: absolute;
+			bottom: 0em;
+			left: 1em;
+			background: rgba(255,255,255,.8);
+			padding: .5em;
+			opacity: 0;
+		}
+		.active .message{
+			bottom: 2em;
+			opacity: 1;
+		}
+		#next,#prev{
+			font-size: 1.5em;
+			padding: 1em;
+			background-color: #fff;
+			background-color: rgba(255,255,255,.7);
+			position: absolute;
+			top: 50%;
+			margin-top: -1.5em;
+			z-index: 5;
+			cursor: pointer;
+		}
+		#next{
+			right: 1em;
+		}
+		#prev{
+			left: 1em;
+		}
+		@media (max-width: 500px){
+			#flower2{
+				width:100%;
+			}
+		}
 	</style>
 </head>
 <body>
@@ -54,18 +104,49 @@
 				<div class="message">This copy is controlled throught css.</div>
 			</li>
 			<li><img src="images/flower2.jpg"/>
-				<div class="message">The only thing thats changed is the addition of the .active class</div>
+				<div class="message">The only thing thats changed is the <a href="#addition">addition</a> of the .active class</div>
 			</li>
 			<li><img src="images/flower3.jpg"/></li>
 			<li><img src="images/flower4.jpg"/></li>
 		</ul>
-		<p> A simple sliding slideshow </p>
+		<p> A simple sliding slideshow w/ a break point at 500px</p>
 		<pre>$('#flower2').slideStrip({controls:'add', slide:true});</pre>
 		<ul id="flower2" class="slide-strip">
 			<li><img src="images/flower1.jpg"/></li>
 			<li><img src="images/flower2.jpg"/></li>
 			<li><img src="images/flower3.jpg"/></li>
 			<li><img src="images/flower4.jpg"/></li>
+		</ul>
+		<p> A Fading slideshow w/ next & previous controls.</p>
+		<pre>$('#flower3').slideStrip({autoPlay:false});</pre>
+		<pre>$('#prev').click(function(){
+    $('#flower3').trigger('previousSlide');
+});</pre>
+		<pre>$('#next').click(function(){
+    $('#flower3').trigger('nextSlide');
+});</pre>
+		<div class="hold">
+			<ul id="flower3" class="fade-strip">
+				<li><img src="images/flower1.jpg"/></li>
+				<li><img src="images/flower2.jpg"/></li>
+				<li><img src="images/flower3.jpg"/></li>
+				<li><img src="images/flower4.jpg"/></li>
+			</ul>
+			<div id="prev">Prev</div>
+			<div id="next">Next</div>
+		</div>
+		<p> A simple sliding slideshow w/ lazy loading images (I made the low resolution images, black and white to better show how this works). This only requires you to provide 2 images for a slide to use it. You can pick and choose which slides receive this capability, by choosing to include a ref image.</p>
+		<pre>$('#flower4').slideStrip({controls:'add', slide:true});</pre>
+		<pre>&lt;img ref="images/flower1.jpg" src="images/flower1_low.jpg"/></pre>
+		<ul id="flower4" class="slide-strip">
+			<li><img ref="images/flower1.jpg" src="images/flower1_low.jpg"/></li>
+			<li><img ref="images/flower2.jpg" src="images/flower2_low.jpg"/></li>
+			<li><img ref="images/flower3.jpg" src="images/flower3_low.jpg"/></li>
+			<li><img ref="images/flower4.jpg" src="images/flower4_low.jpg"/></li>
+			<li><img ref="images/flower1.jpg" src="images/flower1_low.jpg"/></li>
+			<li><img ref="images/flower2.jpg" src="images/flower2_low.jpg"/></li>
+			<li><img ref="images/flower3.jpg" src="images/flower3_low.jpg"/></li>
+			<li><img ref="images/flower4.jpg" src="images/flower4_low.jpg"/></li>
 		</ul>
 	</section>
 </body>

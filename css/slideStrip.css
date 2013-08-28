@@ -57,14 +57,6 @@ ul.fade-strip  li.active{
 	opacity:1;
 }
 
-ul.fade-strip li .message{
-	position: absolute;
-	bottom:1em;
-	left:1em;
-	background: rgba(255,255,255,.8);
-	padding: .5em
-}
-
 /*Sliding slideStrip CSS*/
 ul.slide-strip {
 	position: relative;

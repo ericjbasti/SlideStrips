@@ -11,6 +11,8 @@
 //
 //	Full Responsive Slideshow w/ CSS animated transitions... 
 //
+// 8/27/13: Minor bug fix, made slingBack go back an entire slideWidth.
+//
 //  8/1/13: Fixed a bug that prevented multiple dynamic control sets.
 //			Each slideshow now has a localized variable containing the controls.
 //			Fixed issue with 3 slides of 2 panel width, never dragging to the last slide.
@@ -58,7 +60,7 @@
 			touch:true,
 			controls: null,
 			trueFit:true,
-			slingBack:false,
+			slingBack:true,
 			threshold:30,
 			fallBacks:{fadeTime:0.5,slideTime:0.5},
 			onSlideChange:function(){}
@@ -91,7 +93,7 @@
 			// ok so we need to get the height of this slideStrip, we need it to be responsive... lets make a sizing element.
 			// inorder to make sure the sizing is correct, we want to use the exact markup of an original element.
 			// however we need to make sure a few things are true, so we inline those styles.
-			var heightElement = $(slideStrip).prepend("<li class='sp_invisible' style='visibility:hidden;position:relative;'>"+$(slides[now]).html()+"</li>");
+			var heightElement = $(slideStrip).prepend("<li class='sp_invisible' style='visibility:hidden;position:relative;z-index:-1;'>"+$(slides[now]).html()+"</li>");
 			// awesome now that we've done that our css and markup should be much cleaner... and valid.
 
 			// time to check what is supported.
@@ -179,7 +181,7 @@
 				now-=slideWidth;
 				if (now<0) {
 					if(options.slingBack && now<=-slideWidth){
-						now=slides.length-1;
+						now=slides.length-slideWidth;
 					}else{
 						now=0;
 					}
