@@ -3,6 +3,7 @@
 .slideStrip{
 	position: relative;
 	overflow: hidden;
+	-webkit-backface-visibility: hidden;
 }
 
 .slideStrip ul li img{
