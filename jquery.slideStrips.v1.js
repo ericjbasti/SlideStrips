@@ -215,7 +215,7 @@
 			};
 
 			var updateWidths = function (){
-				trueWidth=$(holder).width()/$(slideStrip).width();
+				trueWidth=$(holder).outerWidth(true)/$(slideStrip).outerWidth(true);
 				slideWidth=Math.floor(trueWidth) || 1;
 				// to many situation when a browser rounds our css% so we need to take action
 				// if your within a range that I would consider a 5% margin of error, we are going to upgrade you.
@@ -269,7 +269,7 @@
 							touch.deltaY = touch.y-parseFloat(event.clientY);
 							percent = (touch.deltaX/original.width)*100;
 							if (!transition) percent = percent/trueWidth;
-							if(options.slide){
+							if(options.slide && slides.length>slideWidth){
 								var newX = original.x-percent;
 								if (newX>0){
 									newX = newX/4;
