@@ -11,6 +11,8 @@
 //
 //	Full Responsive Slideshow w/ CSS animated transitions... 
 //
+// 9/13/13: Fixed some lingering IE8 bugs. Compensated for IE9s inability to transition.
+//
 // 8/27/13: Minor bug fix, made slingBack go back an entire slideWidth.
 //
 //  8/1/13: Fixed a bug that prevented multiple dynamic control sets.
@@ -57,11 +59,11 @@
 			pause:5,
 			autoPlay:true,
 			slide:false,
-			touch:true,
+			touch:false,
 			controls: null,
 			trueFit:true,
-			slingBack:true,
-			threshold:30,
+			slingBack:false,
+			threshold:20,
 			fallBacks:{fadeTime:0.5,slideTime:0.5},
 			onSlideChange:function(){}
 		};
@@ -93,7 +95,7 @@
 			// ok so we need to get the height of this slideStrip, we need it to be responsive... lets make a sizing element.
 			// inorder to make sure the sizing is correct, we want to use the exact markup of an original element.
 			// however we need to make sure a few things are true, so we inline those styles.
-			var heightElement = $(slideStrip).prepend("<li class='sp_invisible' style='visibility:hidden;position:relative;z-index:-1;'>"+$(slides[now]).html()+"</li>");
+			var heightElement = $(slideStrip).prepend("<li class='sp_invisible' style='visibility:hidden;position:relative;'>"+$(slides[now]).html()+"</li>");
 			// awesome now that we've done that our css and markup should be much cleaner... and valid.
 
 			// time to check what is supported.
@@ -110,13 +112,14 @@
 			}
 
 			var activeSlide = function(id){
-				if(!transition)	$(slideStrip).clearQueue();
+				if(!transform)	$(slideStrip).clearQueue();
 				$(slides).removeClass('active');
 				for (var i=0; i!= slideWidth; i++){
 					$(slides[id+i]).addClass('active');
 					var img= $(slides[id+i]).find('img');
 					if($(img).attr('ref') && $(img).attr('ref')!= $(img).attr('src')){
 						$(img).attr('src',$(img).attr('ref'));
+						//$(slideStrip).removeClass('accelerate');
 					}
 				}
 
@@ -132,7 +135,15 @@
 						slideStrip.style[transform] = 'translateX('+newX+'%)';
 					}else{
 						// So close, but for some reason I have to divide by the slideWidth, guess the positioning is messing with my 100%.
-						$(slideStrip).animate({left:newX/trueWidth+"%"},options.fallBacks.slideTime*1000);
+						if(transform){ //ie9
+							$(slideStrip).animate({'transform': newX}, {
+							    step: function(newX) {
+							      $(this).css('-ms-transform','translateX('+newX+'%)');
+							    }},options.fallBacks.slideTime*1000);
+						}else{ // ie8
+							console.log('ie8')
+							$(slideStrip).animate({left:newX/trueWidth+"%"},options.fallBacks.slideTime*1000);
+						}
 					}
 				}else{
 					if(!options.slide && !transition){
@@ -215,7 +226,7 @@
 			};
 
 			var updateWidths = function (){
-				trueWidth=$(holder).outerWidth(true)/$(slideStrip).outerWidth(true);
+				trueWidth=$(holder).width()/$(slideStrip).width();
 				slideWidth=Math.floor(trueWidth) || 1;
 				// to many situation when a browser rounds our css% so we need to take action
 				// if your within a range that I would consider a 5% margin of error, we are going to upgrade you.
@@ -243,8 +254,9 @@
 					if (!event) event = window.event;
 
 					var onPress=function(event){
-						if(transition){
+						if(transform){
 							original.x=parseFloat((slideStrip.style[transform]).replace('translateX(',''));
+							$(slideStrip).addClass('accelerate');
 						}else{
 							$(slideStrip).clearQueue();
 							original.x=parseFloat(slideStrip.style.left);
@@ -259,7 +271,13 @@
 						paused=true;
 						if(transition) slideStrip.style[transition+'Duration'] = '0s';
 						if(event.type=='mousedown'){
-							event.preventDefault();
+	
+							if(event.preventDefault){
+								event.preventDefault();
+							}else{
+								// window.event.returnValue = false;
+								// window.event.cancelBubble = true;
+							}
 						}
 					};
 
@@ -268,27 +286,35 @@
 							touch.deltaX = touch.x-parseFloat(event.clientX);
 							touch.deltaY = touch.y-parseFloat(event.clientY);
 							percent = (touch.deltaX/original.width)*100;
-							if (!transition) percent = percent/trueWidth;
+							if (!transform) percent = percent/trueWidth;
 							if(options.slide && slides.length>slideWidth){
 								var newX = original.x-percent;
 								if (newX>0){
 									newX = newX/4;
 								}
-								if (newX<=-maxX){
-									if(original.x>-maxX+25){
-										newX = -maxX+25-(percent*0.25);
-									}else{
-										newX = -maxX-(percent*0.25);
+								if(transform){
+									if (newX<=-maxX){
+										if(original.x>-maxX+25){
+											newX = -maxX+25-(percent*0.25);
+										}else{
+											newX = -maxX-(percent*0.25);
+										}
 									}
-								}
-								if(transition){
 									slideStrip.style[transform] = 'translateX('+newX+'%)';
 								}else{
+									if (newX<=-(maxX-(slideWidth*100))){
+										newX = -maxX+(slideWidth*100)-(percent*0.25);
+									}
 									$(slideStrip).css({'left':newX+'%'});
 								}
 							}
 							if(touch.deltaX>=10 || touch.deltaX<=-10) {
-								e.preventDefault();
+								if(e.preventDefault) {
+									e.preventDefault();
+								}else{
+									window.event.returnValue = false;
+									window.event.cancelBubble = true;
+								}
 								$(slideStrip).addClass('moving');
 							}
 						}
@@ -301,7 +327,7 @@
 						}
 						var newX;
 						var maxDelta=options.threshold;
-						if (!transition) maxDelta=maxDelta/trueWidth;
+						if (!transform) maxDelta=maxDelta/trueWidth;
 						if(percent>maxDelta){
 							nextSlide();
 						}else if (percent<-maxDelta){
@@ -311,7 +337,7 @@
 						}
 						touch.active=false;
 						if(percent>=5 || percent<=-5) {
-							event.preventDefault();
+							//event.preventDefault();
 							setTimeout(function(){
 								$(slideStrip).removeClass('moving');
 							},100);
@@ -383,11 +409,12 @@
 					now=0;
 					play(true);
 					maxX=(slides.length*100)-(trueWidth*100);
-					//if(!transition) maxX=maxX/slideWidth;
 				});
 				setTimeout(function(){
 					$(window).trigger('resize');
-				},1000);
+					$(slideStrip).addClass('accelerate');
+					// we set this class after everything is placed on the screen 
+				},500);
 			}
 			init();
 		});
