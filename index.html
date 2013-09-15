@@ -3,6 +3,7 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
@@ -100,12 +101,29 @@
         </section>
 
         <hr>
-
         <section id="main_content">
+          <h2>Before we start</h2>
           <p>
+            Your basic HTML markup:
+            <pre>&lt;ul id="flower2" class="slide-strip"&gt;
+    &lt;li&gt;&lt;img src="images/flower1.jpg"/&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img src="images/flower2.jpg"/&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img src="images/flower3.jpg"/&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img src="images/flower4.jpg"/&gt;&lt;/li&gt;
+&lt;/ul&gt;</pre>
+          </p>
+          <p>
+            Predefined CSS Classes to add to your slideStrip &lt;ul&gt;
+            <pre>.fade-strip
+
+.slide-strip</pre>
+          You will need to use one of these css classes until you're comfortable enough to create your own. Know that every slide that is visible receives as class of <i>active</i>. 
+          <p>
+       <h2>Now our jQuery</h2>
       This is a very basic fading slideshow.
     </p>
     <pre>$('#flower').slideStrip({controls:'add'});</pre>
+    <p>The controls:'add' tells the script that you don't have a predefined element to put controls in, and it should 'add' an element and place controls there.</p>
     <ul id="flower" class="fade-strip">
       <li><img src="images/flower1.jpg"/>
         <div class="message">This copy is controlled throught css.</div>
