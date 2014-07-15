@@ -12,16 +12,11 @@
 	<script src="jquery.slideStrips.v1.js"></script>
 	<script>
 		$(function(){
-			$('#flower').slideStrip({controls:'add'});
+			$('#flowerFade').slideStrip({controls:'add', slide:false, autoPlay: true, hoverPause:true});
 			$('#flower2').slideStrip({controls:'add', slide:true});
-			$('#flower3').slideStrip({slingBack:true, autoPlay:false});
-			$('#prev').click(function(){
-				$('#flower3').trigger('previousSlide');
-			});
-			$('#next').click(function(){
-				$('#flower3').trigger('nextSlide');
-			});
+			$('#flower3').slideStrip({controls:'add', autoPlay:false, slide:true});
 			$('#flower4').slideStrip({controls:'add', slide:true});
+			$('#flower5').slideStrip({controls:'add', slide:true});
 		});
 	</script>
 	<style>
@@ -35,10 +30,11 @@
 			border-top: 10px solid #270;
 			box-shadow: 0 0 3px rgba(0,0,0,.3);
 			width: 100%;
-			max-width: 800px;
+			max-width: 960px;
 			margin: 0 auto;
 			padding: 20px;
 			box-sizing: border-box;
+			-moz-box-sizing: border-box
 		}
 		h1{
 			padding: 0;
@@ -68,85 +64,121 @@
 			bottom: 2em;
 			opacity: 1;
 		}
-		#next,#prev{
+		.next,.prev{
 			font-size: 1.5em;
-			padding: 1em;
+			/*padding: 1em;*/
+			width: 13%;
 			background-color: #fff;
-			background-color: rgba(255,255,255,.7);
+			background-color: rgba(255,255,255,.5);
 			position: absolute;
-			top: 50%;
+			top: 0;
+			height: 100%;
 			margin-top: -1.5em;
 			z-index: 5;
 			cursor: pointer;
 		}
-		#next{
-			right: 1em;
+		.next{
+			right: 0;
 		}
-		#prev{
-			left: 1em;
+		.prev{
+			left: 0;
 		}
-		@media (max-width: 500px){
+		.disabled{
+			opacity: .2;
+		}
+		/*@media (max-width: 500px){*/
 			#flower2{
-				width:100%;
+				width: 25%;
+				min-width: 200px;
 			}
-		}
+			#flower3{
+				width: 33.334%;
+				/*min-width: 200px;*/
+			}
+			#flower4{
+				width: 20%;
+				min-width: 160px;
+			}
+			#flower5{
+				width: 20%;
+			}
+			@media (max-width: 720px){
+				#flower5{
+					width: 33.33%;
+				}
+			}
+			@media (max-width: 480px){
+				section{
+					padding: 0;
+				}
+				#flower5{
+					width: 50%;
+				}
+			}
+		/*}*/
 	</style>
 </head>
 <body>
 	<section>
-		<h1>slideStrips v1</h1>
-        <p>
-			This is a very basic fading slideshow.
-		</p>
-		<pre>$('#flower').slideStrip({controls:'add'});</pre>
-		<ul id="flower" class="fade-strip">
-			<li><img src="images/flower1.jpg"/>
-				<div class="message">This copy is controlled throught css.</div>
-			</li>
-			<li><img src="images/flower2.jpg"/>
-				<div class="message">The only thing thats changed is the <a href="#addition">addition</a> of the .active class</div>
-			</li>
+		<ul id="flowerFade" class="fade-strip">
+			<li><img src="images/flower1.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
 			<li><img src="images/flower3.jpg"/></li>
 			<li><img src="images/flower4.jpg"/></li>
 		</ul>
-		<p> A simple sliding slideshow w/ a break point at 500px</p>
-		<pre>$('#flower2').slideStrip({controls:'add', slide:true});</pre>
 		<ul id="flower2" class="slide-strip">
 			<li><img src="images/flower1.jpg"/></li>
 			<li><img src="images/flower2.jpg"/></li>
 			<li><img src="images/flower3.jpg"/></li>
 			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
 		</ul>
-		<p> A Fading slideshow w/ next & previous controls.</p>
-		<pre>$('#flower3').slideStrip({autoPlay:false});</pre>
-		<pre>$('#prev').click(function(){
-    $('#flower3').trigger('previousSlide');
-});</pre>
-		<pre>$('#next').click(function(){
-    $('#flower3').trigger('nextSlide');
-});</pre>
-		<div class="hold">
-			<ul id="flower3" class="fade-strip">
-				<li><img src="images/flower1.jpg"/></li>
-				<li><img src="images/flower2.jpg"/></li>
-				<li><img src="images/flower3.jpg"/></li>
-				<li><img src="images/flower4.jpg"/></li>
-			</ul>
-			<div id="prev">Prev</div>
-			<div id="next">Next</div>
-		</div>
-		<p> A simple sliding slideshow w/ lazy loading images (I made the low resolution images, black and white to better show how this works). This only requires you to provide 2 images for a slide to use it. You can pick and choose which slides receive this capability, by choosing to include a ref image.</p>
-		<pre>$('#flower4').slideStrip({controls:'add', slide:true});</pre>
-		<pre>&lt;img ref="images/flower1.jpg" src="images/flower1_low.jpg"/></pre>
+		<ul id="flower3" class="slide-strip">
+			<li><img src="images/flower1.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+		</ul>
 		<ul id="flower4" class="slide-strip">
-			<li><img ref="images/flower1.jpg" src="images/flower1_low.jpg"/></li>
-			<li><img ref="images/flower2.jpg" src="images/flower2_low.jpg"/></li>
-			<li><img ref="images/flower3.jpg" src="images/flower3_low.jpg"/></li>
-			<li><img ref="images/flower4.jpg" src="images/flower4_low.jpg"/></li>
-			<li><img ref="images/flower1.jpg" src="images/flower1_low.jpg"/></li>
-			<li><img ref="images/flower2.jpg" src="images/flower2_low.jpg"/></li>
-			<li><img ref="images/flower3.jpg" src="images/flower3_low.jpg"/></li>
-			<li><img ref="images/flower4.jpg" src="images/flower4_low.jpg"/></li>
+			<li><img src="images/flower1.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+		</ul>
+		<ul id="flower5" class="slide-strip">
+			<li><img src="images/flower1.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower2.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
+			<li><img src="images/flower3.jpg"/></li>
+			<li><img src="images/flower4.jpg"/></li>
 		</ul>
 	</section>
 </body>
