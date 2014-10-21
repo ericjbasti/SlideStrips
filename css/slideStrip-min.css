@@ -1,0 +1,73 @@
+/* General slideStrip CSS */
+.disable-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+.slideStrip {
+  position: relative;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden; }
+  .slideStrip ul li img {
+    width: 100%; }
+
+.controls .button {
+  font-size: 1em;
+  width: 1em;
+  height: 1em;
+  background-color: #eeeeee;
+  border-radius: 0.5em;
+  margin: 0.2em;
+  cursor: pointer;
+  display: inline-block; }
+.controls .button.active {
+  background-color: #cccccc; }
+
+/*Fading slideStrip CSS */
+ul.fade-strip {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%; }
+  ul.fade-strip li {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    z-index: 0;
+    -webkit-transition: opacity 0.5s;
+    -moz-transition: opacity 0.5s;
+    transition: opacity 0.5s; }
+  ul.fade-strip li.active {
+    z-index: 1;
+    opacity: 1; }
+
+/*Sliding slideStrip CSS */
+ul.slide-strip {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 50%;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  transition-duration: 0.5s; }
+  ul.slide-strip li {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0em;
+    overflow: hidden; }
+
+ul.slide-strip.moving {
+  -webkit-transition-duration: 0s;
+  -moz-transition-duration: 0s;
+  transition-duration: 0s;
+  cursor: -webkit-grabbing; }

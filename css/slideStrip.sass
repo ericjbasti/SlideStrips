@@ -1,0 +1,455 @@
+@import "bourbon"
+
+/* General slideStrip CSS*/
+
+.disable-select
+	@include user-select(none)
+
+.slideStrip
+	position: relative
+	overflow: hidden
+	-webkit-backface-visibility: hidden
+	ul li img
+		width: 100%
+
+
+.controls 
+	.button 
+		font-size: 1em
+		width: 1em
+		height: 1em
+		background-color: #eee
+		border-radius: 0.5em
+		margin: 0.2em
+		cursor: pointer
+		display: inline-block
+	.button.active 
+		background-color: #cccccc
+
+/*Fading slideStrip CSS*/
+
+ul.fade-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		opacity: 0
+		z-index: 0
+		@include transition(opacity .5s)
+	li.active
+		z-index: 1
+		opacity: 1
+ul.fade-strip.no-js li:first-child
+	opacity: 1
+
+/*Sliding slideStrip CSS*/
+ul.slide-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 50%
+	@include transition-property(transform)
+	@include transition-duration(.5s)
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		padding: 0em
+		overflow: hidden
+
+ul.slide-strip.moving
+	@include transition-duration( 0s )
+	cursor: -webkit-grabbing
+
+
+
+/*swaping slideStrip CSS*/
+ul.swap-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		z-index: 0
+		@include animation-duration(.5s)
+
+	li.active
+		z-index: 2
+		@include transform(translateX(0%))
+	li.enter-prev
+		@include animation-name( enter-prev )
+	li.exit-prev
+		z-index: 1
+		@include animation-name( exit-prev )
+	li.enter-next
+		@include animation-name( enter-next )
+	li.exit-next
+		z-index: 1
+		@include animation-name( exit-next )
+
+@include keyframes(exit-next)
+	from 
+		@include transform(translateX(0%))
+	to 
+		@include transform(translateX(-100%))
+
+@include keyframes(exit-prev)
+	from 
+		@include transform(translateX(0%))
+	to 
+		@include transform(translateX(100%))
+
+@include keyframes(enter-next)
+	from 
+		@include transform(translateX(100%))
+	to 
+		@include transform(translateX(0%))
+
+@include keyframes(enter-prev)
+	from 
+		@include transform(translateX(-100%))
+	to 
+		@include transform(translateX(0%))
+		
+
+
+
+/*3d slideStrip CSS*/
+ul.rotateX-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	@include perspective(1000px) 
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		z-index: 0
+		opacity: 0
+		@include animation-duration(.5s)
+		@include backface-visibility(hidden)
+		@include transform-style(preserve-3d)
+	li.active
+		z-index: 2
+		opacity: 1
+		@include transform(rotateX(0deg))
+	li.enter-prev
+		@include animation-name( enter-prev-rotateX )
+	li.exit-prev
+		z-index: 1
+		opacity: 1
+		@include animation-name( exit-prev-rotateX )
+	li.enter-next
+		@include animation-name( enter-next-rotateX )
+	li.exit-next
+		opacity: 1
+		z-index: 1
+		@include animation-name( exit-next-rotateX )
+
+@include keyframes(exit-next-rotateX)
+	from 
+		@include transform(rotateX(0deg))
+	to 
+		@include transform(rotateX(-180deg))
+
+@include keyframes(exit-prev-rotateX)
+	from 
+		@include transform(rotateX(0deg))
+	to 
+		@include transform(rotateX(180deg))
+
+@include keyframes(enter-next-rotateX)
+	from 
+		@include transform(rotateX(180deg))
+	to 
+		@include transform(rotateX(0deg))
+
+@include keyframes(enter-prev-rotateX)
+	from 
+		@include transform(rotateX(-180deg))
+	to 
+		@include transform(rotateX(0deg))
+		
+
+
+
+ul.rotateY-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	@include perspective(1000px) 
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		z-index: 0
+		opacity: 0
+		@include animation-duration(.5s)
+		@include backface-visibility(hidden)
+		@include transform-style(preserve-3d)
+	li.active
+		z-index: 2
+		opacity: 1
+		@include transform(rotateY(0deg))
+	li.enter-prev
+		@include animation-name( enter-prev-rotateY )
+	li.exit-prev
+		z-index: 1
+		opacity: 1
+		@include animation-name( exit-prev-rotateY )
+	li.enter-next
+		@include animation-name( enter-next-rotateY )
+	li.exit-next
+		opacity: 1
+		z-index: 1
+		@include animation-name( exit-next-rotateY )
+
+@include keyframes(exit-next-rotateY)
+	from 
+		@include transform(rotateY(0deg))
+	to 
+		@include transform(rotateY(-180deg))
+
+@include keyframes(exit-prev-rotateY)
+	from 
+		@include transform(rotateY(0deg))
+	to 
+		@include transform(rotateY(180deg))
+
+@include keyframes(enter-next-rotateY)
+	from 
+		@include transform(rotateY(180deg))
+	to 
+		@include transform(rotateY(0deg))
+
+@include keyframes(enter-prev-rotateY)
+	from 
+		@include transform(rotateY(-180deg))
+	to 
+		@include transform(rotateY(0deg))
+
+
+ul.stacked-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	@include perspective(800px) 
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		z-index: 0
+		opacity: 0
+		@include animation-duration(.5s)
+		@include backface-visibility(hidden)
+		@include transform-style(preserve-3d)
+	li.active
+		z-index: 2
+		opacity: 1
+		@include transform(rotateY(0deg))
+	li.enter-prev
+		@include animation-name( enter-prev-stacked )
+		@include transform-origin(0% 50%)
+	li.exit-prev
+		z-index: 1
+		opacity: 1
+		@include animation-name( exit-prev-stacked )
+		@include transform-origin(100% 50%)
+	li.enter-next
+		@include animation-name( enter-next-stacked )
+		@include transform-origin(100% 50%)
+	li.exit-next
+		opacity: 1
+		z-index: 1
+		@include animation-name( exit-next-stacked )
+		@include transform-origin(0% 50%)
+
+$degrees: 110deg
+
+@include keyframes(exit-next-stacked)
+	from 
+		@include transform(rotateY(0deg))
+	to 
+		@include transform(rotateY(90deg))
+
+@include keyframes(exit-prev-stacked)
+	from 
+		@include transform(rotateY(0deg))
+	to 
+		@include transform(rotateY(-90deg))
+
+@include keyframes(enter-next-stacked)
+	from 
+		@include transform(rotateY(-$degrees))
+	to 
+		@include transform(rotateY(0deg))
+
+@include keyframes(enter-prev-stacked)
+	from 
+		@include transform(rotateY($degrees))
+	to 
+		@include transform(rotateY(0deg))
+		
+
+
+ul.flipbook-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	@include perspective(800px) 
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		z-index: 0
+		opacity: 0
+		@include animation-duration(.5s)
+		@include backface-visibility(hidden)
+		@include transform-style(preserve-3d)
+		@include transform-origin(0% 50%)
+	li.active
+		z-index: 2
+		opacity: 1
+		@include transform(rotateY(0deg))
+	li.enter-prev
+		@include animation-name( enter-prev-flipbook )
+	li.exit-prev
+		z-index: 1
+		opacity: 1
+		@include animation-name( exit-prev-flipbook )
+	li.enter-next
+		@include animation-name( enter-next-flipbook )
+	li.exit-next
+		opacity: 1
+		z-index: 1
+		@include animation-name( exit-next-flipbook )
+
+$degrees: 130deg
+
+@include keyframes(exit-next-flipbook)
+	from 
+		@include transform(rotateY(0deg))
+	to 
+		@include transform(rotateY(-$degrees))
+
+@include keyframes(exit-prev-flipbook)
+	from 
+		@include transform(rotateY(0deg))
+	to 
+		@include transform(rotateY($degrees))
+
+@include keyframes(enter-next-flipbook)
+	from 
+		@include transform(rotateY($degrees))
+	to 
+		@include transform(rotateY(0deg))
+
+@include keyframes(enter-prev-flipbook)
+	from 
+		@include transform(rotateY(-$degrees))
+	to 
+		@include transform(rotateY(0deg))
+		
+ul.blur-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		z-index: 0
+		@include animation-duration(2s)
+	li.active
+		z-index: 1
+	li[class^='exit']
+		@include animation-name( exit-blur )
+	li[class^='enter']
+		@include animation-name( enter-blur )
+
+
+@include keyframes(enter-blur)
+	from 
+		opacity: 0
+		@include filter(blur(10px))
+	to 
+		opacity: 1
+		@include filter(blur(0))
+
+@include keyframes(exit-blur)
+	from 
+		opacity: 1
+		z-index: 2
+		@include filter(blur(0))
+	to 
+		opacity: 0
+		z-index: 2
+		@include filter(blur(10px))
+
+
+ul.blowout-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		z-index: 0
+		@include animation-duration(2s)
+	li.active
+		z-index: 1
+	li[class^='exit']
+		@include animation-name( exit-blowout )
+	li[class^='enter']
+		@include animation-name( enter-blowout )
+
+
+@include keyframes(enter-blowout)
+	from 
+		opacity: 0
+		@include filter(brightness(10))
+	to 
+		opacity: 1
+		@include filter(brightness(1))
+
+@include keyframes(exit-blowout)
+	from 
+		opacity: 1
+		z-index: 2
+		@include filter(brightness(1))
+	to 
+		opacity: 0
+		z-index: 2
+		@include filter(brightness(10))

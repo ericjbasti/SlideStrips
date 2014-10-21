@@ -1,0 +1,72 @@
+@import "bourbon"
+
+/* General slideStrip CSS*/
+
+.disable-select
+	@include user-select(none)
+
+.slideStrip
+	position: relative
+	overflow: hidden
+	-webkit-backface-visibility: hidden
+	ul li img
+		width: 100%
+
+
+.controls 
+	.button 
+		font-size: 1em
+		width: 1em
+		height: 1em
+		background-color: #eee
+		border-radius: 0.5em
+		margin: 0.2em
+		cursor: pointer
+		display: inline-block
+	.button.active 
+		background-color: #cccccc
+
+/*Fading slideStrip CSS*/
+
+ul.fade-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 100%
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		opacity: 0
+		z-index: 0
+		@include transition(opacity .5s)
+	li.active
+		z-index: 1
+		opacity: 1
+
+/*Sliding slideStrip CSS*/
+ul.slide-strip 
+	position: relative
+	list-style: none
+	margin: 0
+	padding: 0
+	width: 50%
+	@include transition-property(transform)
+	@include transition-duration(.5s)
+	li 
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		padding: 0em
+		overflow: hidden
+
+ul.slide-strip.moving
+	@include transition-duration( 0s )
+	cursor: -webkit-grabbing
+
+.no-js ul.fade-strip li:first-child
+	position: relative
+	opacity: 1

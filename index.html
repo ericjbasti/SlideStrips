@@ -12,7 +12,7 @@
 	<script src="jquery.slideStrips.v1.js"></script>
 	<script>
 		$(function(){
-			$('#flowerFade').slideStrip({controls:'add', slide:false, autoPlay: true, hoverPause:true});
+			$('#flowerFade').slideStrip({controls:'add', slide:false, autoPlay: true, pause: 4,  slingBack:true});
 			$('#flower2').slideStrip({controls:'add', slide:true});
 			$('#flower3').slideStrip({controls:'add', autoPlay:false, slide:true});
 			$('#flower4').slideStrip({controls:'add', slide:true});
@@ -119,16 +119,10 @@
 	</style>
 </head>
 <body>
-	<section>
-		<ul id="flowerFade" class="fade-strip">
+	<section  class="disable-select">
+		<ul id="flowerFade" class="swap-strip disable-select">
 			<li><img src="images/flower1.jpg"/></li>
 			<li><img src="images/flower2.jpg"/></li>
-			<li><img src="images/flower3.jpg"/></li>
-			<li><img src="images/flower4.jpg"/></li>
-			<li><img src="images/flower2.jpg"/></li>
-			<li><img src="images/flower3.jpg"/></li>
-			<li><img src="images/flower3.jpg"/></li>
-			<li><img src="images/flower4.jpg"/></li>
 			<li><img src="images/flower3.jpg"/></li>
 			<li><img src="images/flower4.jpg"/></li>
 		</ul>

@@ -11,6 +11,8 @@
 //
 //	Full Responsive Slideshow w/ CSS animated transitions... 
 //
+// 7/16/14: An original idea comes back into play. We now have css animations as an option for transitions
+//
 // 6/28/14: Single panel slides can now resize based on the content.
 //
 // 4/14/14: Removed messy cycling code. 
@@ -79,6 +81,9 @@
 			checkResize: true,
 			hoverPause: false,
 			autoSize: false,
+			mobileThreshold: 580,
+			disableOnMobile: false,
+			scrollWheel: false,
 			onSlideChange:function(){}
 		};
 
@@ -108,9 +113,22 @@
 				$(prev_control).click(function(){
 					previousSlide();
 				})
+			}else if ($(options.controls)[0]){
+				$(options.controls).each(function(id){
+					var id = id;
+					$(this).click(function(){
+						$(options.controls).removeClass('active');
+						$(this).addClass('active');
+						now=id;
+						play(paused);
+					})
+				})
+				$($(options.controls)[0]).addClass('active');
 			}
 			
 			var now = options.start;
+			var old = options.start;
+			var direction = 'next';
 			var timer = null;
 			var paused = !options.autoPlay;
 			var maxX=0;
@@ -163,16 +181,38 @@
 
 
 			var activeSlide = function(id){
+				$(slides).removeClass('enter-next enter-prev exit-next exit-prev');
+				if(old<id){
+					direction = 'next';
+				}else if(old>id){
+					direction = 'prev';
+				}else{
+					direction = '';
+				}
+				old = id;
 				if(!transform)	$(slideStrip).clearQueue();
+				if(direction!=''){
+					$(slideStrip).find('.active').addClass('exit-'+direction);
+				}
 				$(slides).removeClass('active');
 				if(options.autoSize){
 					$(slideStrip).find('.sp_invisible').html($(slides[id]).html());
 				}
 				for (var i=0; i!= slideWidth; i++){
-					$(slides[id+i]).addClass('active');
+					if(direction!=''){
+						$(slides[id+i]).addClass('active').addClass('enter-'+direction);
+					}else{
+						$(slides[id+i]).addClass('active');
+					}
 					var img= $(slides[id+i]).find('img');
+
 					if($(img).attr('ref') && $(img).attr('ref')!= $(img).attr('src')){
 						$(img).attr('src',$(img).attr('ref'));
+					}
+					if($(img).attr('data-large-src') && $(img).attr('data-large-src')!= $(img).attr('src')){
+						if($(window).width()>options.mobileThreshold){
+							$(img).attr('src',$(img).attr('data-large-src'));
+						}
 					}
 				}
 
@@ -212,6 +252,7 @@
 				}else{
 					$(next_control).removeClass('disabled');
 				}
+				
 			};
 
 			var play = function(pause){
@@ -229,9 +270,10 @@
 
 			var nextSlide = function(){
 				now+=slideWidth;
-				//console.log(now,slideWidth,slides.length,now-1>slides.length-slideWidth)
+				// direction = 'next';
 				if (now-(slideWidth/2)>slides.length-slideWidth) {
 					if(options.slingBack){
+						old=-1;
 						now=0;
 					}else{
 						now=slides.length-slideWidth;
@@ -242,10 +284,11 @@
 
 			var previousSlide = function(){
 				now-=slideWidth;
-
+				// direction = 'prev';
 				if (now<0) {
 					if(options.slingBack && now<=-slideWidth){
 						now=slides.length-slideWidth;
+						old=slides.length;
 					}else{
 						now=0;
 					}
@@ -316,6 +359,9 @@
 					if (!event) event = window.event;
 
 					var onPress=function(event){
+						if(options.disableOnMobile && $(window).width()<options.mobileThreshold){
+							return;
+						}
 						$(slideStrip).addClass('moving');
 						if(transform){
 							original.x=parseFloat((slideStrip.style[transform]).replace('translateX(',''));
@@ -344,6 +390,9 @@
 					};
 
 					var onMove=function(event,e){
+						if(options.disableOnMobile && $(window).width()<options.mobileThreshold){
+							return;
+						}
 						if(touch.active){
 							touch.deltaX = touch.x-parseFloat(event.clientX);
 							touch.deltaY = touch.y-parseFloat(event.clientY);
@@ -383,6 +432,9 @@
 					};
 
 					var onRelease=function(event){
+						if(options.disableOnMobile && $(window).width()<options.mobileThreshold){
+							return;
+						}
 						if(touch.active){
 							$(slideStrip).removeClass('moving');
 							var newX;
@@ -440,13 +492,31 @@
 						slideStrip.ontouchleave	=	onPressEvent;
 					}
 				}
+
+				var MouseWheelHandler = function(e){
+					e.preventDefault();
+					if(e.wheelDelta>window.innerHeight){
+						nextSlide();
+					}
+					if(-e.wheelDelta>window.innerHeight){
+						previousSlide();
+					}
+				}
+
+				if(options.scrollWheel){
+					if(slideStrip.addEventListener){
+						slideStrip.addEventListener("mousewheel", MouseWheelHandler, false);
+						slideStrip.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+					}else{
+						slideStrip.attachEvent("onmousewheel", MouseWheelHandler);
+					}
+				}
 			}
 
 			// CALL: $('#who').trigger('loadSlide', number);
 			$(this).bind('loadSlide',function(event,id){
 				if(now!=id){
-					now=id;
-					activeSlide(now);
+					activeSlide(id);
 				}
 			});
 
