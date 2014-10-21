@@ -1,0 +1,10 @@
+
+.DS_Store
+
+*.codekit
+
+*.scssc
+
+css/slideStrip-presass.css
+
+*.sassc
